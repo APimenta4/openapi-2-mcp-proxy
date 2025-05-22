@@ -1,0 +1,33 @@
+openapi: 3.0.0
+info:
+  title: APIProvider
+  version: 1.0.0
+servers:
+  - url: 'https://example.url.com'
+paths:
+  /carrots/{search}:
+    get:
+      operationId: List all carrots
+      description: Retrieve information about all the available carrots
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of items to return
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: header
+          description: Number of items to skip
+          required: false
+          schema:
+            type: integer
+        - name: search
+          in: path
+          description: Search term to filter assets
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful request

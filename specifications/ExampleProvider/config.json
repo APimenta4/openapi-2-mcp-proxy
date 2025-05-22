@@ -1,0 +1,6 @@
+{
+  "base_url": "https://provider.example.com",
+  "headers": {
+    "Authorization": "Bearer 432546546432"
+  }
+}
