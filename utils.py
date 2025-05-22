@@ -1,6 +1,9 @@
 import inspect
-from typing import Optional
 import requests
+import os
+import json
+from typing import Optional
+from openapi_parser import parse
 from openapi_parser.enumeration import ParameterLocation
 
 class FunctionParameter:
@@ -23,6 +26,9 @@ class FunctionParameter:
         )
 
 def create_dynamic_function(provider_name, operation, path, base_url, provider_headers):
+    """
+
+    """
     parameters = [] 
     # Add parameters associated with operation
     for param in operation.parameters:
@@ -99,3 +105,35 @@ def create_dynamic_function(provider_name, operation, path, base_url, provider_h
     dynamic_function.__doc__ = doc
 
     return dynamic_function
+
+def load_provider_configuration(subdir, provider_name):
+    # Parse the OpenAPI specification
+    specification = None
+    for spec_filename in ['specification.json', 'specification.yaml', 'specification.yml']:
+        spec_path = os.path.join(subdir, spec_filename)
+        if os.path.exists(spec_path):
+            specification = parse(spec_path)
+            print(f"Found and parsed {spec_filename} for provider {provider_name}.")
+            break
+    
+    if not specification:
+        raise Exception(f"No specification file found.")
+
+    provider_info = {
+        'specification': specification
+    }
+    
+    # Load provider-specific configuration file
+    config_path = os.path.join(subdir, 'config.json')
+    with open(config_path, 'r') as config_file:
+        config = json.load(config_file)
+        # Override with configuration if available
+        if config:
+            if 'base_url' in config:
+                provider_info['base_url'] = config['base_url']
+            else:
+                raise Exception(f"base_url not found in config.json")
+            if 'headers' in config:
+                provider_info['headers'] = config['headers']
+    
+    return provider_info
