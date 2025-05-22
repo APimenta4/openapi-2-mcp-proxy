@@ -18,7 +18,7 @@ class FunctionParameter:
     def to_inspect_parameter(self) -> inspect.Parameter:
         return inspect.Parameter(
             name=self.name,
-            kind=inspect.Parameter.POSITIONAL_OR_KEYWORD,
+            kind=inspect.Parameter.KEYWORD_ONLY,
             default=inspect.Parameter.empty if self.required else None
         )
 
