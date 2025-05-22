@@ -28,7 +28,8 @@ def create_dynamic_function(provider_name, operation, path, base_url, provider_h
     for param in operation.parameters:
         param_name = param.name.replace('-', '_')
         new_parameter = FunctionParameter(
-            name=param_name,
+            # Remove invalid characters
+            name=''.join(e for e in param_name if e.isalnum() or e == '_'),
             required=param.required,
             description=param.description,
             _in = param.location
